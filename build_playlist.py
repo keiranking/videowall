@@ -19,17 +19,18 @@ def playlist_item_text(file, file_duration, start_time, stop_time):
         + "#EXTVLCOPT:stop-time=" + str(stop_time) + "\n" \
         + file + "\n"
 
-path = os.getcwd()
+# Set defaults
 clip_duration = int(sys.argv[1]) if len(sys.argv) >= 2 else 10
 intended_playlist_duration = int(sys.argv[2])*3600 if len(sys.argv) >= 3 else 4*3600
 playlist_name = (sys.argv[3] if len(sys.argv) >= 4 
-    else os.path.split(path)[1].lower() + ".m3u")
+    else os.path.split(os.getcwd())[1].lower() + ".m3u")
 
-current_playlist_duration = 0
-
+# Create playlist
 _m3u = open(playlist_name, "w")
 _m3u.write("#EXTM3U" + "\n")
+
 files = glob.glob("*.m*4*")
+current_playlist_duration = 0
 while current_playlist_duration < intended_playlist_duration:
     random.shuffle(files)
     for file in files:
@@ -39,8 +40,11 @@ while current_playlist_duration < intended_playlist_duration:
 
         _m3u.write(playlist_item_text(file, file_duration, start_time, stop_time))
         current_playlist_duration += file_duration
+        if current_playlist_duration >= intended_playlist_duration:
+            break
+
 _m3u.close()
 
 print(playlist_name + " created"
-    " (" + str(len(glob.glob("*.m*4*"))) + " files" +
-    ", " + time.strftime("about %-Hhr %-Mmin", time.gmtime(current_playlist_duration)) + ")")
+    " (" + time.strftime("%-Hhr %-Mmin", time.gmtime(current_playlist_duration)) +
+    ", using " + str(len(files)) + " source files" + ")")

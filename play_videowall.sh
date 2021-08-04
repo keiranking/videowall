@@ -18,7 +18,7 @@ while getopts ${optstring} arg; do
   esac
 done
 
-echo "Creating playlist..."
+echo "Generating playlist..."
 python3 build_playlist.py $CLIP_DURATION_IN_SECONDS $PLAYLIST_DURATION_IN_HOURS $PLAYLIST_NAME
 echo "Playing playlist..."
 /Applications/VLC.app/Contents/MacOS/VLC --playlist-autostart --fullscreen --no-osd --loop --no-random --no-audio --video-filter "extract{component=0x3b1e00}" $PLAYLIST_NAME

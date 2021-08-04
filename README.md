@@ -14,9 +14,7 @@ Drop `build_playlist.py` and `play_videowall.sh` into any folder that contains v
 
 ## Usage
 
-To play a videowall:
-
-`./play_videowall.sh`
+Open `play_videowall.sh`.
 
 ### Options
 
