@@ -20,13 +20,17 @@ Open `play_videowall.sh`.
 
 These options determine the behavior of the videowall:
 
-- `-t <integer>`  
-  Set the duration of each video clip to `<integer>` seconds. (If not supplied, defaults to 10 seconds.)
+- `-c <HTML color hex>`  
+  Tints all videos `<HTML color hex>`. (Defaults to `3b1e00`.)
+
+  Example: `./play_videowall.sh -c 2e003b`
 
 - `-f <string>`  
-  Set the filename to `<string>`. Should be in format `filename.m3u`. (If not supplied, defaults to name of current folder.)
+  Set the filename to `<string>`. Should be in format `filename.m3u`. (Defaults to name of current folder.)
 
-### Example
+  Example: `./play_videowall.sh -f party.m3u`
 
-- `./play_videowall.sh -t 15 -f party.m3u`  
-  Builds and plays playlist `party.m3u` with random 15-sec video clips.
+- `-t <integer>`  
+  Set the duration of each video clip to `<integer>` seconds. (Defaults to 10 seconds.)
+
+  Example: `./play_videowall.sh -t 30`
