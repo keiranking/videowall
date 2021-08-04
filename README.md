@@ -4,9 +4,9 @@ A shell script to play random snippets from a collection of video files.
 
 ## Requirements
 
-- Python 3
-- ffmpeg
-- VLC, a video player app
+- [Python 3](https://www.python.org/downloads/)
+- [ffmpeg](https://formulae.brew.sh/formula/ffmpeg)
+- [VLC](https://www.videolan.org/vlc/)
 
 ## Setup
 
