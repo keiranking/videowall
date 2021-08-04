@@ -30,16 +30,19 @@ _m3u = open(playlist_name, "w")
 _m3u.write("#EXTM3U" + "\n")
 
 files = glob.glob("*.m*4*")
+file_durations = dict(zip(files,[get_duration(file) for file in files]))
 current_playlist_duration = 0
 while current_playlist_duration < intended_playlist_duration:
     random.shuffle(files)
     for file in files:
-        file_duration = get_duration(file)
-        start_time = random.randint(0,file_duration - clip_duration) if file_duration > clip_duration else 0
-        stop_time = start_time + clip_duration if file_duration > clip_duration else file_duration
+        start_time, stop_time = 0, file_durations[file]
+        if file_durations[file] > clip_duration:
+            start_time = random.randint(0,file_durations[file] - clip_duration)
+            stop_time = start_time + clip_duration
 
-        _m3u.write(playlist_item_text(file, file_duration, start_time, stop_time))
-        current_playlist_duration += file_duration
+        _m3u.write(playlist_item_text(file, file_durations[file], start_time, stop_time))
+
+        current_playlist_duration += clip_duration
         if current_playlist_duration >= intended_playlist_duration:
             break
 
