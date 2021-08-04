@@ -22,7 +22,6 @@ def playlist_item_text(file, file_duration, start_time, stop_time):
 path = os.getcwd()
 clip_duration = int(sys.argv[1]) if len(sys.argv) >= 2 else 10
 intended_playlist_duration = int(sys.argv[2])*3600 if len(sys.argv) >= 3 else 4*3600
-print(clip_duration, intended_playlist_duration)
 playlist_name = (sys.argv[3] if len(sys.argv) >= 4 
     else os.path.split(path)[1].lower() + ".m3u")
 
