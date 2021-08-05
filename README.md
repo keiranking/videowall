@@ -10,7 +10,7 @@ A shell script to play random snippets from a collection of video files.
 
 ## Setup
 
-Drop `build_playlist.py` and `play_videowall.sh` into any folder that contains video files (`.mp4`, `.m4v`).
+Drop `build_playlist.py` and `play_videowall.sh` into any folder that contains video files.
 
 ## Usage
 

@@ -41,7 +41,7 @@ playlist = open(playlist_name, "w")
 playlist.write("#EXTM3U" + "\n")
 
 files = []
-for extension in ["avi", "m4v", "mkv", "mp4", "mpeg"]:
+for extension in ["avi", "m4v", "mkv", "mov", "mp4", "mpeg", "mpg"]:
     files.extend(glob.glob(
         ("**/*." if is_recursive else "*.") + extension,
         recursive = is_recursive))

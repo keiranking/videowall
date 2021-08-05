@@ -23,6 +23,6 @@ while getopts ${optstring} arg; do
 done
 
 echo "Generating playlist..."
-python3 build_playlist.py $clip_duration_in_seconds $playlist_duration_in_hours $playlist_name $is_recursive
+python3 build_playlist.py $clip_duration_in_seconds $playlist_duration_in_hours "$playlist_name" $is_recursive
 echo "Playing playlist..."
-/Applications/VLC.app/Contents/MacOS/VLC --playlist-autostart --fullscreen --no-osd --loop --no-random --no-audio --video-filter "extract{component=0x$color_tint}" $playlist_name
+/Applications/VLC.app/Contents/MacOS/VLC --playlist-autostart --fullscreen --no-osd --loop --no-random --no-audio --video-filter "extract{component=0x$color_tint}" "$playlist_name"
