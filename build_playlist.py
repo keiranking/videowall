@@ -19,19 +19,35 @@ def playlist_item_text(file, file_duration, start_time, stop_time):
         + "#EXTVLCOPT:stop-time=" + str(stop_time) + "\n" \
         + file + "\n"
 
-# Set defaults
-clip_duration = int(sys.argv[1]) if len(sys.argv) >= 2 else 10
-intended_playlist_duration = int(sys.argv[2])*3600 if len(sys.argv) >= 3 else 4*3600
-playlist_name = (sys.argv[3] if len(sys.argv) >= 4 
-    else os.path.split(os.getcwd())[1].lower() + ".m3u")
+# Set defaults and override, if appropriate
+clip_duration = 10
+if len(sys.argv) >= 2:
+    clip_duration = int(sys.argv[1])
+
+intended_playlist_duration = 4*3600
+if len(sys.argv) >= 3:
+    intended_playlist_duration = int(sys.argv[2])*3600
+
+playlist_name = os.path.split(os.getcwd())[1].lower() + ".m3u"
+if len(sys.argv) >= 4:
+    playlist_name = sys.argv[3]
+
+is_recursive = False
+if len(sys.argv) >= 5 and sys.argv[4] == 'true':
+    is_recursive = True
 
 # Create playlist
-_m3u = open(playlist_name, "w")
-_m3u.write("#EXTM3U" + "\n")
+playlist = open(playlist_name, "w")
+playlist.write("#EXTM3U" + "\n")
 
-files = glob.glob("*.m*4*")
+files = []
+for extension in ["avi", "m4v", "mkv", "mp4", "mpeg"]:
+    files.extend(glob.glob(
+        ("**/*." if is_recursive else "*.") + extension,
+        recursive = is_recursive))
 file_durations = dict(zip(files,[get_duration(file) for file in files]))
 current_playlist_duration = 0
+
 while current_playlist_duration < intended_playlist_duration:
     random.shuffle(files)
     for file in files:
@@ -40,14 +56,14 @@ while current_playlist_duration < intended_playlist_duration:
             start_time = random.randint(0,file_durations[file] - clip_duration)
             stop_time = start_time + clip_duration
 
-        _m3u.write(playlist_item_text(file, file_durations[file], start_time, stop_time))
+        playlist.write(playlist_item_text(file, file_durations[file], start_time, stop_time))
 
         current_playlist_duration += clip_duration
         if current_playlist_duration >= intended_playlist_duration:
             break
 
-_m3u.close()
+playlist.close()
 
 print(playlist_name + " created"
     " (" + time.strftime("%-Hhr %-Mmin", time.gmtime(current_playlist_duration)) +
-    ", using " + str(len(files)) + " source files" + ")")
+    " from " + str(len(files)) + " files" + ")")

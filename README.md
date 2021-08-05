@@ -21,7 +21,7 @@ Open `play_videowall.sh`.
 These options determine the behavior of the videowall:
 
 - `-c <HTML color hex>`  
-  Tints all videos `<HTML color hex>`. (Defaults to `3b1e00`.)
+  Tint all videos `<HTML color hex>`. (Defaults to `3b1e00`.)
 
   Example: `./play_videowall.sh -c 2e003b`
 
@@ -29,6 +29,11 @@ These options determine the behavior of the videowall:
   Set the filename to `<string>`. Should be in format `filename.m3u`. (Defaults to name of current folder.)
 
   Example: `./play_videowall.sh -f party.m3u`
+
+- `-r`  
+  Include video files in subfolders (recursively).
+
+  Example: `./play_videowall.sh -r`
 
 - `-t <integer>`  
   Set the duration of each video clip to `<integer>` seconds. (Defaults to 10 seconds.)

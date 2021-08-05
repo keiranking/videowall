@@ -1,26 +1,28 @@
 #!/bin/sh
 
 # Run relative to script location
-PARENT_PATH=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
-cd "$PARENT_PATH"
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+cd "$parent_path"
 
 # Set defaults
-PLAYLIST_NAME="$(basename "$PWD").m3u"
-CLIP_DURATION_IN_SECONDS=10
-PLAYLIST_DURATION_IN_HOURS=4
-COLOR_TINT="3b1e00"
+playlist_name="$(basename "$PWD").m3u"
+clip_duration_in_seconds=10
+playlist_duration_in_hours=4
+color_tint="3b1e00"
+is_recursive=false
 
 # Process flags and override defaults
-optstring="c:f:t:"
+optstring="c:f:rt:"
 while getopts ${optstring} arg; do
   case "${arg}" in
-    c) COLOR_TINT=${OPTARG};;
-    f) PLAYLIST_NAME=${OPTARG};;
-    t) CLIP_DURATION_IN_SECONDS=${OPTARG};;
+    c) color_tint=${OPTARG};;
+    f) playlist_name=${OPTARG};;
+    r) is_recursive=true;;
+    t) clip_duration_in_seconds=${OPTARG};;
   esac
 done
 
 echo "Generating playlist..."
-python3 build_playlist.py $CLIP_DURATION_IN_SECONDS $PLAYLIST_DURATION_IN_HOURS $PLAYLIST_NAME
+python3 build_playlist.py $clip_duration_in_seconds $playlist_duration_in_hours $playlist_name $is_recursive
 echo "Playing playlist..."
-/Applications/VLC.app/Contents/MacOS/VLC --playlist-autostart --fullscreen --no-osd --loop --no-random --no-audio --video-filter "extract{component=0x$COLOR_TINT}" $PLAYLIST_NAME
+/Applications/VLC.app/Contents/MacOS/VLC --playlist-autostart --fullscreen --no-osd --loop --no-random --no-audio --video-filter "extract{component=0x$color_tint}" $playlist_name
