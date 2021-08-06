@@ -25,10 +25,10 @@ These options determine the behavior of the videowall:
 
   Example: `./play_videowall.sh -c 2e003b`
 
-- `-f <string>`  
-  Set the filename to `<string>`. Should be in format `filename.m3u`. (Defaults to name of current folder.)
+- `-f <format>`  
+  Set the playlist format to `<format>`. Options: `m3u`, `xspf`. (Defaults to `m3u`.)
 
-  Example: `./play_videowall.sh -f party.m3u`
+  Example: `./play_videowall.sh -f xspf`
 
 - `-r`  
   Include video files in subfolders (recursively).

@@ -28,19 +28,24 @@ intended_playlist_duration = 4*3600
 if len(sys.argv) >= 3:
     intended_playlist_duration = int(sys.argv[2])*3600
 
-playlist_name = os.path.split(os.getcwd())[1].lower() + ".m3u"
+playlist_name = os.path.split(os.getcwd())[1]
 if len(sys.argv) >= 4:
     playlist_name = sys.argv[3]
 
+playlist_format = "m3u"
+# if len(sys.argv) >= 5:
+#     playlist_format = sys.argv[4]
+playlist_name += f".{playlist_format}"
+
 is_recursive = False
-if len(sys.argv) >= 5 and sys.argv[4] == 'true':
+if len(sys.argv) >= 6 and sys.argv[5] == 'true':
     is_recursive = True
 
 # Get video files
 files = []
-for extension in ["avi", "m4v", "mkv", "mov", "mp4", "mpeg", "mpg"]:
+for video_format in ["avi", "m4v", "mkv", "mov", "mp4", "mpeg", "mpg"]:
     files.extend(glob.glob(
-        ("**/*." if is_recursive else "*.") + extension,
+        ("**/*." if is_recursive else "*.") + video_format,
         recursive = is_recursive))
 file_durations = dict(zip(files,[get_duration(file) for file in files]))
 
