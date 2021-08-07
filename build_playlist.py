@@ -13,7 +13,7 @@ def get_duration(file):
         stderr=subprocess.STDOUT)
     return int(float(result.stdout))
 
-def playlist_item_text(file, file_duration, start_time, stop_time):
+def generate_playlist_item_text(file, file_duration, start_time, stop_time):
     return "#EXTINF:" + str(file_duration) + "," + file + "\n" \
         + "#EXTVLCOPT:start-time=" + str(start_time) + "\n" \
         + "#EXTVLCOPT:stop-time=" + str(stop_time) + "\n" \
@@ -36,18 +36,17 @@ is_recursive = False
 if len(sys.argv) >= 5 and sys.argv[4] == 'true':
     is_recursive = True
 
-# Create playlist
-playlist = open(playlist_name, "w")
-playlist.write("#EXTM3U" + "\n")
-
+# Get video files
 files = []
 for extension in ["avi", "m4v", "mkv", "mov", "mp4", "mpeg", "mpg"]:
     files.extend(glob.glob(
         ("**/*." if is_recursive else "*.") + extension,
         recursive = is_recursive))
 file_durations = dict(zip(files,[get_duration(file) for file in files]))
-current_playlist_duration = 0
 
+# Assemble playlist items
+playlist_items = []
+current_playlist_duration = 0
 while current_playlist_duration < intended_playlist_duration:
     random.shuffle(files)
     for file in files:
@@ -56,12 +55,15 @@ while current_playlist_duration < intended_playlist_duration:
             start_time = random.randint(0,file_durations[file] - clip_duration)
             stop_time = start_time + clip_duration
 
-        playlist.write(playlist_item_text(file, file_durations[file], start_time, stop_time))
+        playlist_items.append(generate_playlist_item_text(file, file_durations[file], start_time, stop_time))
 
         current_playlist_duration += clip_duration
         if current_playlist_duration >= intended_playlist_duration:
             break
 
+# Create playlist file
+playlist = open(playlist_name, "w")
+playlist.write("#EXTM3U" + "\n" + "".join(playlist_items))
 playlist.close()
 
 print(playlist_name + " created"
