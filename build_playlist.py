@@ -1,9 +1,10 @@
+import xml.etree.ElementTree as ET
 import glob
 import os
 import random
 import subprocess
 import sys
-import time 
+import time
 
 def get_duration(file):
     result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
@@ -13,11 +14,46 @@ def get_duration(file):
         stderr=subprocess.STDOUT)
     return int(float(result.stdout))
 
-def generate_playlist_item_text(file, file_duration, start_time, stop_time):
-    return "#EXTINF:" + str(file_duration) + "," + file + "\n" \
-        + "#EXTVLCOPT:start-time=" + str(start_time) + "\n" \
-        + "#EXTVLCOPT:stop-time=" + str(stop_time) + "\n" \
-        + file + "\n"
+def generate_playlist_item_text(file, duration, start_time, stop_time, format = "m3u"):
+    if format == "m3u":
+        return "#EXTINF:" + str(duration) + "," + file + "\n" \
+            + "#EXTVLCOPT:start-time=" + str(start_time) + "\n" \
+            + "#EXTVLCOPT:stop-time=" + str(stop_time) + "\n" \
+            + file + "\n"
+    elif format == "xspf":
+        track_tag = ET.Element("track")
+
+        location_tag = ET.SubElement(track_tag, "location")
+        location_tag.text = file
+
+        duration_tag = ET.SubElement(track_tag, "duration")
+        duration_tag.text = str(duration)
+
+        extension_tag = ET.SubElement(track_tag, "extension")
+        extension_tag.set("application", "http://www.videolan.org/vlc/playlist/0")
+
+        start_time_tag = ET.SubElement(extension_tag, "vlc:option")
+        start_time_tag.text = f"start-time={start_time}"
+        stop_time_tag = ET.SubElement(extension_tag, "vlc:option")
+        stop_time_tag.text = f"stop-time={stop_time}"
+
+        return track_tag
+
+def generate_playlist_text(items, format = "m3u"):
+    if format == "m3u":
+        return "#EXTM3U" + "\n" + "".join(items)
+    elif format == "xspf":
+        playlist_tag = ET.Element("playlist")
+        playlist_tag.set("version", "1")
+        playlist_tag.set("xmlns", "http://xspf.org/ns/0/")
+        playlist_tag.set("xmlns:vlc", "http://www.videolan.org/vlc/playlist/ns/0/")
+
+        trackList_tag = ET.SubElement(playlist_tag, "trackList")
+        for item in items:
+            trackList_tag.append(item)
+
+        ET.indent(ET.ElementTree(playlist_tag))
+        return ET.tostring(playlist_tag, encoding = "unicode", xml_declaration = True)
 
 # Set defaults and override, if appropriate
 clip_duration = 10
@@ -33,8 +69,8 @@ if len(sys.argv) >= 4:
     playlist_name = sys.argv[3]
 
 playlist_format = "m3u"
-# if len(sys.argv) >= 5:
-#     playlist_format = sys.argv[4]
+if len(sys.argv) >= 5:
+    playlist_format = sys.argv[4]
 playlist_name += f".{playlist_format}"
 
 is_recursive = False
@@ -60,7 +96,7 @@ while current_playlist_duration < intended_playlist_duration:
             start_time = random.randint(0,file_durations[file] - clip_duration)
             stop_time = start_time + clip_duration
 
-        playlist_items.append(generate_playlist_item_text(file, file_durations[file], start_time, stop_time))
+        playlist_items.append(generate_playlist_item_text(file, file_durations[file], start_time, stop_time, playlist_format))
 
         current_playlist_duration += clip_duration
         if current_playlist_duration >= intended_playlist_duration:
@@ -68,7 +104,7 @@ while current_playlist_duration < intended_playlist_duration:
 
 # Create playlist file
 playlist = open(playlist_name, "w")
-playlist.write("#EXTM3U" + "\n" + "".join(playlist_items))
+playlist.write(generate_playlist_text(playlist_items, playlist_format))
 playlist.close()
 
 print(playlist_name + " created"
