@@ -4,6 +4,10 @@
 parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 cd "$parent_path"
 
+function help_prompt {
+  echo "Try '$(basename $0) -h' for more information"
+}
+
 function help_text {
   echo "Options and arguments:"
   echo "-c <color>    tint video files; <color> must be 6-digit hexadecimal"
@@ -14,8 +18,7 @@ function help_text {
 }
 
 function usage_text {
-  echo "Usage: ./play_videowall.sh [-c <color>] [-f <format>]"
-  echo "    [-h] [-r] [-t <integer>]"
+  echo "Usage: $(basename $0) [-hr] [-c <color>] [-f <format>] [-t <integer>]"
 }
 
 # Set defaults
@@ -35,6 +38,7 @@ while getopts ${optstring} arg; do
       if [[ ! "$color_tint" =~ ^([[:xdigit:]]{6})$ ]]
       then
         echo "error: '$color_tint' is not a valid color"
+        help_prompt
         exit 1
       fi
       ;;
@@ -43,6 +47,7 @@ while getopts ${optstring} arg; do
       if [[ ! "$playlist_format" =~ ^(m3u|xspf)$ ]]
       then
         echo "error: '$playlist_format' is not a valid playlist format"
+        help_prompt
         exit 1
       fi
       ;;
@@ -58,6 +63,7 @@ while getopts ${optstring} arg; do
       if [[ ! "$clip_duration_in_seconds" =~ ^([0-9]+)$ ]]
       then
         echo "error: '$clip_duration_in_seconds' is not a valid integer"
+        help_prompt
         exit 1
       fi
       ;;
