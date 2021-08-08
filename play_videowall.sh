@@ -30,8 +30,22 @@ is_recursive=false
 optstring=":c:f:hrt:"
 while getopts ${optstring} arg; do
   case "${arg}" in
-    c) color_tint=${OPTARG};;
-    f) playlist_format=${OPTARG};;
+    c)
+      color_tint=${OPTARG}
+      if [[ ! "$color_tint" =~ ^([[:xdigit:]]{6})$ ]]
+      then
+        echo "error: '$color_tint' is not a valid color"
+        exit 1
+      fi
+      ;;
+    f)
+      playlist_format=${OPTARG}
+      if [[ ! "$playlist_format" =~ ^(m3u|xspf)$ ]]
+      then
+        echo "error: '$playlist_format' is not a valid playlist format"
+        exit 1
+      fi
+      ;;
     h)
       usage_text
       echo
@@ -39,9 +53,21 @@ while getopts ${optstring} arg; do
       exit 0
       ;;
     r) is_recursive=true;;
-    t) clip_duration_in_seconds=${OPTARG};;
-    ?)
+    t)
+      clip_duration_in_seconds=${OPTARG}
+      if [[ ! "$clip_duration_in_seconds" =~ ^([0-9]+)$ ]]
+      then
+        echo "error: '$clip_duration_in_seconds' is not a valid integer"
+        exit 1
+      fi
+      ;;
+    \?)
       echo "Unknown option: -$OPTARG" 1>&2
+      usage_text
+      exit 1
+      ;;
+    :)
+      echo "Option '-$OPTARG' requires an argument"
       usage_text
       exit 1
       ;;
