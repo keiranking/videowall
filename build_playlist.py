@@ -76,30 +76,37 @@ def get_duration(file):
     return int(float(result.stdout))
 
 # Set defaults and override, if appropriate
+<<<<<<< HEAD
 clip_duration = 30
+=======
+# intended_playlist_duration = 4*3600
+intended_playlist_duration = 60
+
+clip_duration = 10
+>>>>>>> d487086 (Adjust start, stop times for nearby cuts)
 if len(sys.argv) >= 2:
     clip_duration = int(sys.argv[1])
 
-intended_playlist_duration = 4*3600
-if len(sys.argv) >= 3:
-    intended_playlist_duration = int(sys.argv[2])*3600
-
 playlist_name = os.path.split(os.getcwd())[1]
-if len(sys.argv) >= 4:
-    playlist_name = sys.argv[3]
+if len(sys.argv) >= 3:
+    playlist_name = sys.argv[2]
 
 playlist_format = "m3u"
-if len(sys.argv) >= 5:
-    playlist_format = sys.argv[4]
+if len(sys.argv) >= 4:
+    playlist_format = sys.argv[3]
 playlist_name += f".{playlist_format}"
 
 is_recursive = False
-if len(sys.argv) >= 6 and sys.argv[5] == 'true':
+if len(sys.argv) >= 5 and sys.argv[4] == 'true':
     is_recursive = True
 
+<<<<<<< HEAD
 is_alphabetical = False
 if len(sys.argv) >= 7 and sys.argv[6] == 'true':
     is_alphabetical = True
+=======
+is_optimized_for_cuts = True
+>>>>>>> d487086 (Adjust start, stop times for nearby cuts)
 
 # Get video files
 files = []
@@ -124,7 +131,14 @@ while current_playlist_duration < intended_playlist_duration:
         start_time, stop_time = 0, file_durations[file]
         if file_durations[file] > clip_duration:
             start_time = random.randint(0,file_durations[file] - clip_duration)
-            stop_time = start_time + clip_duration
+            if is_optimized_for_cuts:
+                cuts = get_cuts(file)
+                if cuts:
+                    start_time = find_closest_number(cuts, start_time)
+                    stop_time = start_time + clip_duration
+                    stop_time = find_closest_number(cuts, stop_time)
+            else:
+                stop_time = start_time + clip_duration
 
         playlist_items.append(generate_playlist_item_text(file, file_durations[file], start_time, stop_time, playlist_format))
 
