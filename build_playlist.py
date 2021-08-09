@@ -5,12 +5,26 @@ import random
 import subprocess
 import sys
 import time
+from scenedetect import VideoManager
+from scenedetect import SceneManager
+from scenedetect.detectors import ContentDetector
 
-def closest(list, target, tolerance = 2):
+def find_closest_number(list, target, tolerance = 2):
     closest_value = min(list, key = lambda i: abs(i - target))
     if abs(closest_value - target) <= tolerance:
         return closest_value
     return target
+
+def get_cuts(file, threshold = 12.0):
+    video_manager = VideoManager([file])
+    scene_manager = SceneManager()
+    scene_manager.add_detector(ContentDetector(threshold))
+    video_manager.set_downscale_factor()
+
+    video_manager.start()
+    scene_manager.detect_scenes(frame_source=video_manager)
+
+    return [round(scene.get_seconds(), 3) for scene in scene_manager.get_cut_list()]
 
 def generate_playlist_item_text(file, duration, start_time, stop_time, format = "m3u"):
     if format == "m3u":
