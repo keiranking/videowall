@@ -6,13 +6,11 @@ import subprocess
 import sys
 import time
 
-def get_duration(file):
-    result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
-                             "format=duration", "-of",
-                             "default=noprint_wrappers=1:nokey=1", file],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT)
-    return int(float(result.stdout))
+def closest(list, target, tolerance = 2):
+    closest_value = min(list, key = lambda i: abs(i - target))
+    if abs(closest_value - target) <= tolerance:
+        return closest_value
+    return target
 
 def generate_playlist_item_text(file, duration, start_time, stop_time, format = "m3u"):
     if format == "m3u":
@@ -54,6 +52,14 @@ def generate_playlist_text(items, format = "m3u"):
 
         ET.indent(ET.ElementTree(playlist_tag))
         return ET.tostring(playlist_tag, encoding = "unicode", xml_declaration = True)
+
+def get_duration(file):
+    result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
+                             "format=duration", "-of",
+                             "default=noprint_wrappers=1:nokey=1", file],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT)
+    return int(float(result.stdout))
 
 # Set defaults and override, if appropriate
 clip_duration = 30
