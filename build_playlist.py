@@ -132,6 +132,9 @@ while current_playlist_duration < intended_playlist_duration:
         if file_durations[file] > clip_duration:
             start_time = random.randint(0,file_durations[file] - clip_duration)
             if is_optimized_for_cuts:
+                # Check if video is already in external database
+                # If not, generate cutlist for this video and add to database
+                # Get cutlist from database
                 cuts = get_cuts(file)
                 if cuts:
                     start_time = find_closest_number(cuts, start_time)
