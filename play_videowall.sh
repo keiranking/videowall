@@ -27,12 +27,14 @@ playlist_name="$(basename "$PWD")"
 clip_duration_in_seconds=10
 playlist_duration_in_hours=4
 color_tint="3b1e00"
+is_alphabetical=false
 is_recursive=false
 
 # Process flags and override defaults
-optstring=":c:f:hrt:"
+optstring=":ac:f:hrt:"
 while getopts ${optstring} arg; do
   case "${arg}" in
+    a) is_alphabetical=true;;
     c)
       color_tint=${OPTARG}
       if [[ ! "$color_tint" =~ ^([[:xdigit:]]{6})$ ]]
@@ -82,6 +84,6 @@ done
 shift $((OPTIND -1))
 
 echo "Generating playlist..."
-python3 build_playlist.py $clip_duration_in_seconds $playlist_duration_in_hours "$playlist_name" $playlist_format $is_recursive
+python3 build_playlist.py $clip_duration_in_seconds $playlist_duration_in_hours "$playlist_name" $playlist_format $is_recursive $is_alphabetical
 echo "Playing playlist..."
 /Applications/VLC.app/Contents/MacOS/VLC --playlist-autostart --fullscreen --no-osd --loop --no-random --no-audio --video-filter "extract{component=0x$color_tint}" "$playlist_name.$playlist_format"

@@ -77,6 +77,10 @@ is_recursive = False
 if len(sys.argv) >= 6 and sys.argv[5] == 'true':
     is_recursive = True
 
+is_alphabetical = False
+if len(sys.argv) >= 7 and sys.argv[6] == 'true':
+    is_alphabetical = True
+
 # Get video files
 files = []
 for video_format in ["avi", "m4v", "mkv", "mov", "mp4", "mpeg", "mpg"]:
@@ -85,11 +89,17 @@ for video_format in ["avi", "m4v", "mkv", "mov", "mp4", "mpeg", "mpg"]:
         recursive = is_recursive))
 file_durations = dict(zip(files,[get_duration(file) for file in files]))
 
+if is_alphabetical:
+    files.sort()
+    intended_playlist_duration = len(files) * clip_duration
+
 # Assemble playlist items
 playlist_items = []
 current_playlist_duration = 0
 while current_playlist_duration < intended_playlist_duration:
-    random.shuffle(files)
+    if not is_alphabetical:
+        random.shuffle(files)
+
     for file in files:
         start_time, stop_time = 0, file_durations[file]
         if file_durations[file] > clip_duration:
