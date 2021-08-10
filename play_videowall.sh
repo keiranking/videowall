@@ -4,21 +4,23 @@
 parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 cd "$parent_path"
 
-function help_prompt {
+help_prompt() {
   echo "Try '$(basename $0) -h' for more information"
 }
 
-function help_text {
+help_text() {
   echo "Options and arguments:"
-  echo "-c <color>    tint video files; <color> must be 6-digit hexadecimal"
-  echo "-f <format>   set playlist format ['m3u', 'xspf']"
-  echo "-h            print this help message and exit"
-  echo "-r            include video files in subfolders (recursively)"
-  echo "-t <integer>  set duration of each video to <integer> seconds"
+  echo "  -a              Play videos alphabetically"
+  echo "  -c HTML_color   Tint video files. (Default: 3b1e00)"
+  echo "  -f format       Set playlist format {m3u|xspf}. (Default: m3u)"
+  echo "  -h              Show this message"
+  echo "  -r              Include files in subfolders"
+  echo "  -t seconds      Set duration of each snippet (Default: 10)"
 }
 
-function usage_text {
-  echo "Usage: $(basename $0) [-hr] [-c <color>] [-f <format>] [-t <integer>]"
+usage_text() {
+  echo "Usage:"
+  echo "  $(basename $0) [-ahr] [-c HTML_color] [-f format] [-t seconds]"
 }
 
 # Set defaults
@@ -39,7 +41,7 @@ while getopts ${optstring} arg; do
       color_tint=${OPTARG}
       if [[ ! "$color_tint" =~ ^([[:xdigit:]]{6})$ ]]
       then
-        echo "error: '$color_tint' is not a valid color"
+        echo "Error: '$color_tint' is not a valid HTML color"
         help_prompt
         exit 1
       fi
@@ -48,7 +50,7 @@ while getopts ${optstring} arg; do
       playlist_format=${OPTARG}
       if [[ ! "$playlist_format" =~ ^(m3u|xspf)$ ]]
       then
-        echo "error: '$playlist_format' is not a valid playlist format"
+        echo "Error: '$playlist_format' is not a valid playlist format"
         help_prompt
         exit 1
       fi
@@ -64,7 +66,7 @@ while getopts ${optstring} arg; do
       clip_duration_in_seconds=${OPTARG}
       if [[ ! "$clip_duration_in_seconds" =~ ^([0-9]+)$ ]]
       then
-        echo "error: '$clip_duration_in_seconds' is not a valid integer"
+        echo "Error: '$clip_duration_in_seconds' is not a valid integer"
         help_prompt
         exit 1
       fi

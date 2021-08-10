@@ -20,22 +20,23 @@ Open `play_videowall.sh`.
 
 These options determine the behavior of the videowall:
 
-- `-c <HTML color hex>`  
-  Tint all videos `<HTML color hex>`. (Defaults to `3b1e00`.)
+- `-a`  
+  Play video files alphabetically.
+
+- `-c HTML_color`  
+  Tint all videos `HTML_color`. (Default: `3b1e00`.)
 
   Example: `./play_videowall.sh -c 2e003b`
 
-- `-f <format>`  
-  Set the playlist format to `<format>`. Options: `m3u`, `xspf`. (Defaults to `m3u`.)
+- `-f format`  
+  Set the playlist format. Options: `m3u`, `xspf`. (Default: `m3u`.)
 
   Example: `./play_videowall.sh -f xspf`
 
 - `-r`  
   Include video files in subfolders (recursively).
 
-  Example: `./play_videowall.sh -r`
-
-- `-t <integer>`  
-  Set the duration of each video clip to `<integer>` seconds. (Defaults to 10 seconds.)
+- `-t seconds`  
+  Set the duration of each video snippet. (Default: `10` seconds.)
 
   Example: `./play_videowall.sh -t 30`
