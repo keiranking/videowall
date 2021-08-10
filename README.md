@@ -36,7 +36,7 @@ These options determine the behavior of the videowall:
 - `-r`  
   Include video files in subfolders (recursively).
 
-- `-t seconds`  
+- `-t duration`  
   Set the duration of each video snippet. (Default: `10` seconds.)
 
   Example: `./play_videowall.sh -t 30`
