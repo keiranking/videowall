@@ -4,5 +4,5 @@
 # But not these files...
 !.gitignore
 !build_playlist.py
-!play_videowall.sh
+!videowall
 !README.md

@@ -5,7 +5,7 @@ parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 cd "$parent_path"
 
 help_prompt() {
-  echo "Try '$(basename $0) -h' for more information."
+  echo "Try './$(basename $0) -h' for more information."
 }
 
 help_text() {
@@ -18,8 +18,7 @@ help_text() {
 }
 
 usage_text() {
-  echo "usage:"
-  echo "  $(basename $0) [-ahr] [-c HTML_color] [-f format] [-t duration]"
+  echo "usage: ./$(basename $0) [-ahr] [-c HTML_color] [-f format] [-t duration]"
 }
 
 # Set defaults

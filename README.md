@@ -10,11 +10,13 @@ A shell script to play random snippets from a collection of video files.
 
 ## Setup
 
-Drop `build_playlist.py` and `play_videowall.sh` into any folder that contains video files.
+Copy `build_playlist.py` and `videowall` into any folder that contains video files.
 
 ## Usage
 
-Open `play_videowall.sh`.
+1. In your terminal, navigate to the folder with your video files.
+
+1. Run `./videowall`.
 
 ### Options
 
@@ -26,12 +28,12 @@ These options determine the behavior of the videowall:
 - `-c HTML_color`  
   Tint all videos `HTML_color`. (Default: `3b1e00`.)
 
-  Example: `./play_videowall.sh -c 2e003b`
+  Example: `./videowall -c 2e003b`
 
 - `-f format`  
   Set the playlist format. Options: `m3u`, `xspf`. (Default: `m3u`.)
 
-  Example: `./play_videowall.sh -f xspf`
+  Example: `./videowall -f xspf`
 
 - `-r`  
   Include video files in subfolders (recursively).
@@ -39,4 +41,4 @@ These options determine the behavior of the videowall:
 - `-t duration`  
   Set the duration of each video snippet. (Default: `10` seconds.)
 
-  Example: `./play_videowall.sh -t 30`
+  Example: `./videowall -t 30`
