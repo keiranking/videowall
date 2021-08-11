@@ -1,6 +1,6 @@
 # Videowall
 
-A shell script to play random snippets from a collection of video files. 
+A shell script to play random snippets from a collection of video files.
 
 ## Requirements
 
@@ -39,6 +39,9 @@ These options determine the behavior of the videowall:
   Include video files in subfolders (recursively).
 
 - `-t duration`  
-  Set the duration of each video snippet. (Default: `10` seconds.)
+  Set the duration of each video snippet. (Default: `30` seconds.)
 
-  Example: `./videowall -t 30`
+  Example: `./videowall -t 10`
+
+- `-x`  
+  Remove all audio and video filters.

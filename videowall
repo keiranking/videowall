@@ -14,11 +14,12 @@ help_text() {
   echo "  -f format       Set playlist format {'m3u'|'xspf'}. (Default: 'm3u')"
   echo "  -h              Display this message."
   echo "  -r              Include files in subfolders."
-  echo "  -t duration     Set duration of each video, in seconds. (Default: '10')"
+  echo "  -t duration     Set duration of each video, in seconds. (Default: '30')"
+  echo "  -x              Remove all audio and video filters."
 }
 
 usage_text() {
-  echo "usage: ./$(basename $0) [-ahr] [-c HTML_color] [-f format] [-t duration]"
+  echo "usage: ./$(basename $0) [-ahrx] [-c HTML_color] [-f format] [-t duration]"
 }
 
 # Set defaults
@@ -27,11 +28,12 @@ playlist_name="$(basename "$PWD")"
 clip_duration_in_seconds=30
 playlist_duration_in_hours=4
 color_tint="3b1e00"
+has_effects=true
 is_alphabetical=false
 is_recursive=false
 
 # Process flags and override defaults
-optstring=":ac:f:hrt:"
+optstring=":ac:f:hrt:x"
 while getopts ${optstring} arg; do
   case "${arg}" in
     a) is_alphabetical=true;;
@@ -69,6 +71,7 @@ while getopts ${optstring} arg; do
         exit 1
       fi
       ;;
+    x) has_effects=false;;
     \?)
       echo "error: Unknown option '-$OPTARG'." 1>&2
       usage_text
@@ -86,4 +89,12 @@ shift $((OPTIND -1))
 echo "Generating playlist..."
 python3 build_playlist.py $clip_duration_in_seconds $playlist_duration_in_hours "$playlist_name" $playlist_format $is_recursive $is_alphabetical
 echo "Playing playlist..."
-/Applications/VLC.app/Contents/MacOS/VLC --playlist-autostart --fullscreen --no-osd --loop --no-random --no-audio --rate=0.67 --video-filter extract:adjust --extract-component=0x$color_tint --contrast=1.2 --brightness=1.05 "$playlist_name.$playlist_format"
+
+player_options="--playlist-autostart --fullscreen --no-osd --loop --no-random"
+video_effect_options=""
+if $has_effects
+then
+  video_effect_options="--no-audio --rate=0.67 --video-filter extract:adjust --extract-component=0x$color_tint --contrast=1.2 --brightness=1.05"
+fi
+
+/Applications/VLC.app/Contents/MacOS/VLC $player_options $video_effect_options "$playlist_name.$playlist_format"
