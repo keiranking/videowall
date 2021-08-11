@@ -56,7 +56,7 @@ def generate_playlist_text(items, format = "m3u"):
         return ET.tostring(playlist_tag, encoding = "unicode", xml_declaration = True)
 
 # Set defaults and override, if appropriate
-clip_duration = 10
+clip_duration = 30
 if len(sys.argv) >= 2:
     clip_duration = int(sys.argv[1])
 

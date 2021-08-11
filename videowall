@@ -24,7 +24,7 @@ usage_text() {
 # Set defaults
 playlist_format="m3u"
 playlist_name="$(basename "$PWD")"
-clip_duration_in_seconds=10
+clip_duration_in_seconds=30
 playlist_duration_in_hours=4
 color_tint="3b1e00"
 is_alphabetical=false
@@ -86,4 +86,4 @@ shift $((OPTIND -1))
 echo "Generating playlist..."
 python3 build_playlist.py $clip_duration_in_seconds $playlist_duration_in_hours "$playlist_name" $playlist_format $is_recursive $is_alphabetical
 echo "Playing playlist..."
-/Applications/VLC.app/Contents/MacOS/VLC --playlist-autostart --fullscreen --no-osd --loop --no-random --no-audio --video-filter "extract{component=0x$color_tint}" "$playlist_name.$playlist_format"
+/Applications/VLC.app/Contents/MacOS/VLC --playlist-autostart --fullscreen --no-osd --loop --no-random --no-audio --rate=0.67 --video-filter extract:adjust --extract-component=0x$color_tint --contrast=1.2 --brightness=1.05 "$playlist_name.$playlist_format"
