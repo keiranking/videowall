@@ -90,11 +90,11 @@ echo "Generating playlist..."
 python3 build_playlist.py $clip_duration_in_seconds $playlist_duration_in_hours "$playlist_name" $playlist_format $is_recursive $is_alphabetical
 echo "Playing playlist..."
 
-player_options="--playlist-autostart --fullscreen --no-osd --loop --no-random"
-video_effect_options=""
+playlist_options="--playlist-autostart --fullscreen --no-osd --loop --no-random"
+video_options=""
 if $has_effects
 then
-  video_effect_options="--no-audio --rate=0.67 --video-filter extract:adjust --extract-component=0x$color_tint --contrast=1.2 --brightness=1.05"
+  video_options="--no-audio --rate=0.67 --video-filter extract:adjust --extract-component=0x$color_tint --contrast=1.2 --brightness=1.05"
 fi
 
-/Applications/VLC.app/Contents/MacOS/VLC $player_options $video_effect_options "$playlist_name.$playlist_format"
+/Applications/VLC.app/Contents/MacOS/VLC $playlist_options $video_options "$playlist_name.$playlist_format"
