@@ -23,7 +23,12 @@ playlist_format="m3u"
 playlist_name="$(basename "$PWD")"
 clip_duration_in_seconds=30
 playlist_duration_in_hours=4
+
+playback_speed=0.67
+contrast=1.2
+brightness=1.05
 color_tint="3b1e00"
+
 has_effects=true
 is_alphabetical=false
 is_recursive=false
@@ -94,7 +99,7 @@ playlist_options="--playlist-autostart --fullscreen --no-osd --loop --no-random"
 video_options=""
 if $has_effects
 then
-  video_options="--no-audio --rate=0.67 --video-filter extract:adjust --extract-component=0x$color_tint --contrast=1.2 --brightness=1.05"
+  video_options="--no-audio --rate=$playback_speed --video-filter extract:adjust --extract-component=0x$color_tint --contrast=$contrast --brightness=$brightness"
 fi
 
 /Applications/VLC.app/Contents/MacOS/VLC $playlist_options $video_options "$playlist_name.$playlist_format"
