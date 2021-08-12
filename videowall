@@ -4,22 +4,18 @@
 parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 cd "$parent_path"
 
-help_prompt() {
-  echo "Try './$(basename $0) -h' for more information."
-}
-
-help_text() {
-  echo "  -a              Play videos alphabetically."
-  echo "  -c HTML_color   Tint video files. (Default: '3b1e00')"
-  echo "  -f format       Set playlist format {'m3u'|'xspf'}. (Default: 'm3u')"
-  echo "  -h              Display this message."
-  echo "  -r              Include files in subfolders."
-  echo "  -t duration     Set duration of each video, in seconds. (Default: '30')"
-  echo "  -x              Remove all audio and video filters."
-}
-
-usage_text() {
-  echo "usage: ./$(basename $0) [-ahrx] [-c HTML_color] [-f format] [-t duration]"
+usage() {
+  echo "usage: $0 [-ahrx] [-c HTML_color] [-f format] [-t duration]"
+  echo
+  echo "  -a, --sort               Play videos alphabetically."
+  echo "  -c, --color HTML_color   Tint video files. (Default: '3b1e00')"
+  echo "  -f, --format format      Set playlist format {'m3u'|'xspf'}."
+  echo "                           (Default: 'm3u')"
+  echo "  -h, --help               Display this message."
+  echo "  -r, --recursive          Include files in subfolders."
+  echo "  -t, --time duration      Set duration of each video, in seconds."
+  echo "                           (Default: '30')"
+  echo "  -x, --no-effects         Remove all audio and video effects."
 }
 
 # Set defaults
@@ -33,58 +29,62 @@ is_alphabetical=false
 is_recursive=false
 
 # Process flags and override defaults
-optstring=":ac:f:hrt:x"
-while getopts ${optstring} arg; do
-  case "${arg}" in
-    a) is_alphabetical=true;;
-    c)
-      color_tint=${OPTARG}
+while [ "$1" != "" ]; do
+  case $1 in
+    -a | --sort)
+      is_alphabetical=true
+      ;;
+    -c | --color)
+      opt="$1"
+      shift
+      color_tint=$1
       if [[ ! "$color_tint" =~ ^([[:xdigit:]]{6})$ ]]
       then
-        echo "error: Option '-${arg}' requires a valid 6-digit HTML color."
-        help_prompt
+        echo "error: Option '$opt' requires a 6-digit HTML color."
+        usage
         exit 1
       fi
       ;;
-    f)
-      playlist_format=${OPTARG}
+    -f | --format)
+      opt="$1"
+      shift
+      playlist_format=$1
       if [[ ! "$playlist_format" =~ ^(m3u|xspf)$ ]]
       then
-        echo "error: Option '-${arg}' requires a valid playlist format {'m3u'|'xspf'}."
-        help_prompt
+        echo "error: Option '$opt' requires a playlist format {'m3u'|'xspf'}."
+        usage
         exit 1
       fi
       ;;
-    h)
-      usage_text
-      echo
-      help_text
+    -h | --help)
+      usage
       exit 0
       ;;
-    r) is_recursive=true;;
-    t)
-      clip_duration_in_seconds=${OPTARG}
+    -r | --recursive)
+      is_recursive=true
+      ;;
+    -t | --time)
+      opt="$1"
+      shift
+      clip_duration_in_seconds=$1
       if [[ ! "$clip_duration_in_seconds" =~ ^([0-9]+)$ ]]
       then
-        echo "error: Option '-${arg}' requires a valid integer duration."
-        help_prompt
+        echo "error: Option '$opt' requires an integer duration."
+        usage
         exit 1
       fi
       ;;
-    x) has_effects=false;;
-    \?)
-      echo "error: Unknown option '-$OPTARG'." 1>&2
-      usage_text
-      exit 1
+    -x | --no-effects)
+      has_effects=false
       ;;
-    :)
-      echo "error: Option '-$OPTARG' requires an argument."
-      usage_text
+    *)
+      echo "error: Unknown option or argument '$1'."
+      usage
       exit 1
       ;;
   esac
+  shift
 done
-shift $((OPTIND -1))
 
 echo "Generating playlist..."
 python3 build_playlist.py $clip_duration_in_seconds $playlist_duration_in_hours "$playlist_name" $playlist_format $is_recursive $is_alphabetical

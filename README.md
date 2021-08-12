@@ -22,26 +22,26 @@ Copy `build_playlist.py` and `videowall` into any folder that contains video fil
 
 These options determine the behavior of the videowall:
 
-- `-a`  
+- `-a, --sort`  
   Play video files alphabetically.
 
-- `-c HTML_color`  
+- `-c, --color HTML_color`  
   Tint all videos `HTML_color`. (Default: `3b1e00`.)
 
   Example: `./videowall -c 2e003b`
 
-- `-f format`  
+- `-f, --format format`  
   Set the playlist format. Options: `m3u`, `xspf`. (Default: `m3u`.)
 
   Example: `./videowall -f xspf`
 
-- `-r`  
+- `-r, --recursive`  
   Include video files in subfolders (recursively).
 
-- `-t duration`  
+- `-t, --time duration`  
   Set the duration of each video snippet. (Default: `30` seconds.)
 
   Example: `./videowall -t 10`
 
-- `-x`  
-  Remove all audio and video filters.
+- `-x, --no-effects`  
+  Remove all audio and video effects.
