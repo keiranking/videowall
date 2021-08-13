@@ -8,13 +8,14 @@ usage() {
   echo "usage: $0 [-ahrx] [-c HTML_color] [-f format] [-t duration]"
   echo
   echo "  -a, --sort               Play videos alphabetically."
-  echo "  -c, --color HTML_color   Tint video files. (Default: '3b1e00')"
-  echo "  -f, --format format      Set playlist format {'m3u'|'xspf'}."
-  echo "                           (Default: 'm3u')"
+  echo "  -c, --color HTML_color   Tint video files. (Default: 3b1e00)"
+  echo "  -f, --format format      Set playlist format [m3u, xspf]."
+  echo "                           (Default: m3u)"
   echo "  -h, --help               Display this message."
   echo "  -r, --recursive          Include files in subfolders."
+  echo "  -s, --speed speed        Set playback speed. (Default: 0.67)"
   echo "  -t, --time duration      Set duration of each video, in seconds."
-  echo "                           (Default: '30')"
+  echo "                           (Default: 30)"
   echo "  -x, --no-effects         Remove all audio and video effects."
 }
 
@@ -42,24 +43,24 @@ while [ "$1" != "" ]; do
     -c | --color)
       opt="$1"
       shift
-      color_tint=$1
-      if [[ ! "$color_tint" =~ ^([[:xdigit:]]{6})$ ]]
+      if [[ ! "$1" =~ ^([[:xdigit:]]{6})$ ]]
       then
         echo "error: Option '$opt' requires a 6-digit HTML color."
         usage
         exit 1
       fi
+      color_tint=$1
       ;;
     -f | --format)
       opt="$1"
       shift
-      playlist_format=$1
-      if [[ ! "$playlist_format" =~ ^(m3u|xspf)$ ]]
+      if [[ ! "$1" =~ ^(m3u|xspf)$ ]]
       then
-        echo "error: Option '$opt' requires a playlist format {'m3u'|'xspf'}."
+        echo "error: Option '$opt' requires a playlist format [m3u, xspf]."
         usage
         exit 1
       fi
+      playlist_format=$1
       ;;
     -h | --help)
       usage
@@ -68,16 +69,27 @@ while [ "$1" != "" ]; do
     -r | --recursive)
       is_recursive=true
       ;;
+    -s | --speed)
+      opt="$1"
+      shift
+      if [[ ! "$1" =~ ^([+-]?[0-9]+\.?[0-9]*)$ ]]
+      then
+        echo "error: Option '$opt' requires a number. Normal speed is 1.0."
+        usage
+        exit 1
+      fi
+      playback_speed=$1
+      ;;
     -t | --time)
       opt="$1"
       shift
-      clip_duration_in_seconds=$1
-      if [[ ! "$clip_duration_in_seconds" =~ ^([0-9]+)$ ]]
+      if [[ ! "$1" =~ ^([0-9]+)$ ]]
       then
         echo "error: Option '$opt' requires an integer duration."
         usage
         exit 1
       fi
+      clip_duration_in_seconds=$1
       ;;
     -x | --no-effects)
       has_effects=false

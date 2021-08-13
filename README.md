@@ -23,7 +23,7 @@ Copy `build_playlist.py` and `videowall` into any folder that contains video fil
 These options determine the behavior of the videowall:
 
 - `-a, --sort`  
-  Play video files alphabetically.
+  Play video files alphabetically by filename.
 
 - `-c, --color HTML_color`  
   Tint all videos `HTML_color`. (Default: `3b1e00`.)
@@ -37,6 +37,11 @@ These options determine the behavior of the videowall:
 
 - `-r, --recursive`  
   Include video files in subfolders (recursively).
+
+- `-s, --speed speed`  
+  Set playback speed. Normal speed is 1.0. (Default: `0.67`.)
+
+  Example: `./videowall -s 2.0`
 
 - `-t, --time duration`  
   Set the duration of each video snippet. (Default: `30` seconds.)
