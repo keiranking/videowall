@@ -76,37 +76,31 @@ def get_duration(file):
     return int(float(result.stdout))
 
 # Set defaults and override, if appropriate
-<<<<<<< HEAD
-clip_duration = 30
-=======
-# intended_playlist_duration = 4*3600
-intended_playlist_duration = 60
+intended_playlist_duration = 4*3600
+# intended_playlist_duration = 60
 
-clip_duration = 10
->>>>>>> d487086 (Adjust start, stop times for nearby cuts)
+clip_duration = 30
 if len(sys.argv) >= 2:
     clip_duration = int(sys.argv[1])
 
 playlist_name = os.path.split(os.getcwd())[1]
-if len(sys.argv) >= 3:
-    playlist_name = sys.argv[2]
+if len(sys.argv) >= 4:
+    playlist_name = sys.argv[3]
 
 playlist_format = "m3u"
-if len(sys.argv) >= 4:
-    playlist_format = sys.argv[3]
+if len(sys.argv) >= 5:
+    playlist_format = sys.argv[4]
 playlist_name += f".{playlist_format}"
 
 is_recursive = False
-if len(sys.argv) >= 5 and sys.argv[4] == 'true':
+if len(sys.argv) >= 6 and sys.argv[5] == 'true':
     is_recursive = True
 
-<<<<<<< HEAD
 is_alphabetical = False
 if len(sys.argv) >= 7 and sys.argv[6] == 'true':
     is_alphabetical = True
-=======
+
 is_optimized_for_cuts = True
->>>>>>> d487086 (Adjust start, stop times for nearby cuts)
 
 # Get video files
 files = []
@@ -132,9 +126,6 @@ while current_playlist_duration < intended_playlist_duration:
         if file_durations[file] > clip_duration:
             start_time = random.randint(0,file_durations[file] - clip_duration)
             if is_optimized_for_cuts:
-                # Check if video is already in external database
-                # If not, generate cutlist for this video and add to database
-                # Get cutlist from database
                 cuts = get_cuts(file)
                 if cuts:
                     start_time = find_closest_number(cuts, start_time)
