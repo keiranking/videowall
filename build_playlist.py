@@ -1,18 +1,14 @@
+from moviepy.editor import *
 import xml.etree.ElementTree as ET
 import glob
 import os
 import random
-import subprocess
 import sys
 import time
 
 def get_duration(file):
-    result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
-                             "format=duration", "-of",
-                             "default=noprint_wrappers=1:nokey=1", file],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT)
-    return int(float(result.stdout))
+    sys.stdout.write("\033[K" + "Processing " + file + "\r")
+    return VideoFileClip(file).duration
 
 def generate_playlist_item_text(file, duration, start_time, stop_time, format = "m3u"):
     if format == "m3u":
@@ -103,7 +99,7 @@ while current_playlist_duration < intended_playlist_duration:
     for file in files:
         start_time, stop_time = 0, file_durations[file]
         if file_durations[file] > clip_duration:
-            start_time = random.randint(0,file_durations[file] - clip_duration)
+            start_time = random.randint(0,int(file_durations[file]) - clip_duration)
             stop_time = start_time + clip_duration
 
         playlist_items.append(generate_playlist_item_text(file, file_durations[file], start_time, stop_time, playlist_format))
