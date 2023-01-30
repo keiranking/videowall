@@ -1,10 +1,11 @@
 from moviepy.editor import *
-import xml.etree.ElementTree as ET
+import csv
 import glob
 import os
 import random
 import sys
 import time
+import xml.etree.ElementTree as ET
 
 def get_duration(file):
     sys.stdout.write("\033[K" + "Processing " + file + "\r")
@@ -83,7 +84,30 @@ for video_format in ["avi", "m4v", "mkv", "mov", "mp4", "mpeg", "mpg"]:
     files.extend(glob.glob(
         ("**/*." if is_recursive else "*.") + video_format,
         recursive = is_recursive))
-file_durations = dict(zip(files,[get_duration(file) for file in files]))
+
+# Retrieve video durations from durations file
+file_durations = {}
+if os.path.exists("durations.txt"):
+    with open("durations.txt", newline = "") as durations_list:
+        reader = csv.reader(durations_list, delimiter="\t")
+        for video in reader:
+            file_durations[video[0]] = float(video[1])
+
+# Cull durations of deleted videos
+for file in list(file_durations.keys()):
+    if file not in files:
+        file_durations.pop(file, None)
+
+# Add new video durations
+for file in files:
+    if file not in file_durations:
+        file_durations[file] = get_duration(file)
+
+# Update durations file
+with open("durations.txt", "w+") as durations_list:
+    writer = csv.writer(durations_list, delimiter="\t")
+    for key, value in file_durations.items():
+        writer.writerow([key, value])
 
 if is_alphabetical:
     files.sort()
