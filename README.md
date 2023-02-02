@@ -5,18 +5,26 @@ A shell script to play random snippets from a collection of video files.
 ## Requirements
 
 - [Python 3](https://www.python.org/downloads/)
-- [ffmpeg](https://formulae.brew.sh/formula/ffmpeg)
+- [moviepy](https://pypi.org/project/moviepy/)
 - [VLC](https://www.videolan.org/vlc/)
 
 ## Setup
 
-Copy `build_playlist.py` and `videowall` into any folder that contains video files.
+1. Copy `build_playlist.py` and `videowall` into any folder that contains video files.
+
+1. If necessary, install **moviepy**: `pip install moviepy`
 
 ## Usage
 
-1. In your terminal, navigate to the folder with your video files.
+From the terminal:
 
-1. Run `./videowall`.
+1. From the folder with your video files, run: `./videowall`
+
+Or, from the Finder:
+
+1. Open `./videowall`.
+
+If you need to make the script executable, run: `chmod 755 ./videowall`
 
 ### Options
 
