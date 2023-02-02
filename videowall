@@ -25,7 +25,7 @@ playlist_name="$(basename "$PWD")"
 clip_duration_in_seconds=30
 playlist_duration_in_hours=4
 
-playback_speed=0.67
+playback_speed=0.618
 contrast=1.2
 brightness=1.05
 color_tint="3b1e00"

@@ -39,7 +39,7 @@ These options determine the behavior of the videowall:
   Include video files in subfolders (recursively).
 
 - `-s, --speed speed`  
-  Set playback speed. Normal speed is 1.0. (Default: `0.67`.)
+  Set playback speed. Normal speed is 1.0. (Default: `0.618`.)
 
   Example: `./videowall -s 2.0`
 
